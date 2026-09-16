@@ -1,0 +1,85 @@
+
+:root{
+  --bg:#08090a;
+  --panel:#0f1113;
+  --card:#14171a;
+  --text:#ffffff;
+  --muted:#b8bec5;
+  --border:#2a2f34;
+  --red:#e31b23;
+  --red-dark:#8b1117;
+  --green:#0f6b3f;
+  --green2:#1f8a57;
+  --blue:#2aa6df;
+  --gold:#d7b44b;
+  --white:#ffffff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.topbar{position:sticky;top:0;z-index:10;background:rgba(13,14,16,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 16px}
+.brand{max-width:1180px;margin:auto;display:flex;gap:10px;align-items:center}
+.brand-logo-wrap{width:68px;height:68px;border-radius:16px;background:#050607;border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;overflow:hidden}
+.brand-logo{width:64px;height:64px;object-fit:contain;display:block}
+.brand strong{display:block;font-size:18px}.brand span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.shell{max-width:1180px;margin:auto;padding:16px}
+.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:12px}
+.tab{min-height:44px;padding:0 16px;border:1px solid var(--border);background:#121417;color:var(--muted);border-radius:999px;white-space:nowrap}
+.tab.active{background:var(--red);border-color:var(--red);color:white;font-weight:800}
+.panel{display:none}.panel.active{display:block}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.8fr);gap:18px;align-items:start}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:18px}
+.section-title{margin-bottom:16px}.section-title.inline{display:flex;justify-content:space-between;gap:10px;align-items:center}
+h2{margin:0;font-size:21px}.section-title p,.muted{margin:4px 0 0;color:var(--muted);font-size:14px}
+.form-card{display:grid;gap:14px}
+fieldset{border:0;padding:0;margin:0}legend,.template-title,label{font-size:13px;font-weight:750;color:#e7e8eb}
+label{display:grid;gap:7px}
+small{color:var(--muted);font-weight:500}
+input,select,textarea{width:100%;min-height:46px;border:1px solid var(--border);border-radius:12px;background:#101216;color:white;padding:11px 12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(241,200,74,.12)}
+textarea{resize:vertical;line-height:1.45}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.segmented{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.segmented input{position:absolute;opacity:0;pointer-events:none}
+.segmented span{min-height:48px;border:1px solid var(--border);border-radius:12px;display:grid;place-items:center;background:#101216}
+.segmented input:checked+span{border-color:var(--gold);background:#332b10;color:#fff;font-weight:900}
+.templates{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.template{position:relative;display:block;cursor:pointer}
+.template input{position:absolute;opacity:0;pointer-events:none}
+.template img{width:100%;aspect-ratio:9/13;object-fit:cover;border:2px solid transparent;border-radius:11px;display:block}
+.template span{display:block;text-align:center;margin-top:5px;font-size:11px;color:var(--muted)}
+.template.selected img{border-color:var(--gold)}.template.selected span{color:white;font-weight:800}
+.upload-label input{padding:9px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.primary,.secondary,.ghost{min-height:46px;border-radius:12px;padding:0 16px;font-weight:850}
+.primary{border:1px solid var(--red);background:var(--red);color:white}
+.secondary{border:1px solid var(--border);background:#25282d;color:white}
+.ghost{border:1px solid var(--border);background:transparent;color:var(--muted)}
+.danger{color:#ff8686}
+.preview-wrap{min-width:0}
+.preview-head{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:2px 0 8px}
+.preview-head strong{color:white}
+canvas{display:block;width:min(100%,360px);height:auto;aspect-ratio:9/16;margin:0 auto 12px;border-radius:22px;background:#000;border:1px solid var(--border)}
+.status{min-height:20px;color:var(--muted);font-size:12px;margin:6px 0 0}
+.list{display:grid;gap:10px}
+.list-item{border:1px solid var(--border);border-radius:14px;padding:13px;background:#121417}
+.list-item-head{display:flex;justify-content:space-between;gap:10px;align-items:start}
+.list-item strong{font-size:15px}.list-item .meta{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.5}
+.pill{display:inline-flex;align-items:center;min-height:28px;border-radius:999px;padding:0 9px;font-size:11px;font-weight:900}
+.pill.disponible{background:#113e27;color:#93efb7}.pill.asignada{background:#443711;color:#ffe494}.pill.cerrada{background:#3b1e1e;color:#ffabab}
+.item-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.item-actions button{min-height:36px;border-radius:9px;border:1px solid var(--border);background:#22252a;color:white;padding:0 10px;font-size:12px}
+.empty{padding:24px;text-align:center;border:1px dashed var(--border);border-radius:14px;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:800px){.two-col{grid-template-columns:1fr}.preview-wrap{order:2}}
+@media(max-width:520px){.shell{padding:10px}.card{padding:14px}.field-row{grid-template-columns:1fr}.templates{grid-template-columns:repeat(2,1fr)}.section-title.inline{align-items:flex-start}.actions>*{flex:1}}
+
+/* Identidad visual Expreso Las Dos Marías */
+.topbar{background:linear-gradient(90deg,rgba(8,9,10,.98),rgba(18,20,23,.98));border-bottom:2px solid var(--red)}
+.brand strong{font-size:19px;letter-spacing:.1px}.brand span{color:#d7dde3}
+.tab.active{background:linear-gradient(135deg,var(--red),var(--red-dark));border-color:var(--red);color:var(--white)}
+.primary{background:linear-gradient(135deg,var(--red),var(--red-dark));border-color:var(--red);color:white}
+.secondary{background:linear-gradient(135deg,#1a1d20,#22262a);border-color:#363b41}
+.segmented input:checked+span{border-color:var(--red);background:linear-gradient(135deg,#2a1113,#111618);box-shadow:0 0 0 1px rgba(227,27,35,.22) inset}
+.template.selected img{border-color:var(--red)}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,166,223,.14)}

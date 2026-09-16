@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <meta name="description" content="Generador rápido de historias de cargas y fichas para guía.">
+  <title>Cargas Hoy</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo-wrap">
+      <img src="assets/logo-las-dos-marias.png" class="brand-logo" alt="Expreso Las Dos Marías">
+    </div>
+    <div>
+      <strong>Expreso Las Dos Marías</strong>
+      <span>Cargas disponibles · Historias · Datos para guía</span>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <nav class="tabs" aria-label="Secciones">
+    <button class="tab active" data-tab="historia">Crear historia</button>
+    <button class="tab" data-tab="cargas">Cargas</button>
+    <button class="tab" data-tab="transportistas">Transportistas</button>
+    <button class="tab" data-tab="guia">Guía</button>
+  </nav>
+
+  <section id="historia" class="panel active">
+    <div class="two-col">
+      <form id="storyForm" class="card form-card">
+        <div class="section-title">
+          <div><h2>Nueva carga</h2><p>Completá los datos y la historia se arma sola.</p></div>
+        </div>
+
+        <fieldset>
+          <legend>Tipo de carga</legend>
+          <div class="segmented">
+            <label><input type="radio" name="cargo" value="papa" checked><span>🥔 Papa</span></label>
+            <label><input type="radio" name="cargo" value="harina"><span>🌾 Harina</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field-row">
+          <label>Origen<input id="origin" type="text" value="Tucumán" maxlength="60"></label>
+          <label>Destino<input id="destination" type="text" value="Posadas" maxlength="60"></label>
+        </div>
+
+        <div class="field-row">
+          <label>¿Cuándo se carga?
+            <select id="when">
+              <option value="Hoy">HOY</option>
+              <option value="Mañana">MAÑANA</option>
+            </select>
+          </label>
+          <label id="priceWrap">Precio por bolsa
+            <input id="price" type="number" min="0" step="50" value="1300" inputmode="numeric">
+          </label>
+        </div>
+
+        <label>Cantidad de camiones <small>(opcional)</small>
+          <input id="trucks" type="number" min="0" max="99" value="1" inputmode="numeric">
+        </label>
+
+        <div class="template-title">Fondo de la historia</div>
+        <div class="templates">
+          <label class="template selected">
+            <input type="radio" name="template" value="papa" checked>
+            <img src="assets/papa.jpg" alt="Campo de papa"><span>Papa</span>
+          </label>
+          <label class="template">
+            <input type="radio" name="template" value="harina">
+            <img src="assets/harina.jpg" alt="Bolsas de harina"><span>Harina</span>
+          </label>
+          <label class="template">
+            <input type="radio" name="template" value="ruta">
+            <img src="assets/ruta.jpg" alt="Ruta rural"><span>Ruta</span>
+          </label>
+          <label class="template">
+            <input type="radio" name="template" value="premium">
+            <img src="assets/premium.jpg" alt="Fondo negro rojo dorado"><span>Premium</span>
+          </label>
+        </div>
+
+        <label class="upload-label">O usar una imagen propia
+          <input id="customBg" type="file" accept="image/*">
+        </label>
+
+        <div class="actions">
+          <button class="primary" type="submit">Actualizar historia</button>
+          <button class="secondary" type="button" id="saveLoad">Guardar carga</button>
+        </div>
+        <p class="status" id="formStatus" aria-live="polite"></p>
+      </form>
+
+      <div class="preview-wrap">
+        <div class="preview-head"><strong>Vista previa</strong><span>1080 × 1920</span></div>
+        <canvas id="storyCanvas" width="1080" height="1920"></canvas>
+        <div class="actions">
+          <button class="primary" type="button" id="downloadStory">Descargar PNG</button>
+          <button class="secondary" type="button" id="shareStory">Compartir</button>
+        </div>
+        <p class="status" id="storyStatus" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="cargas" class="panel">
+    <div class="card">
+      <div class="section-title inline">
+        <div><h2>Cargas guardadas</h2><p>Disponibles, asignadas o cerradas.</p></div>
+        <button class="ghost danger" type="button" id="clearClosed">Borrar cerradas</button>
+      </div>
+      <div id="loadsList" class="list"></div>
+    </div>
+  </section>
+
+  <section id="transportistas" class="panel">
+    <div class="two-col">
+      <form id="carrierForm" class="card form-card">
+        <div class="section-title"><div><h2>Nuevo transportista</h2><p>Guardalo una vez para no volver a escribir sus datos.</p></div></div>
+        <label>Nombre del transporte<input id="carrierName" required maxlength="80"></label>
+        <label>CUIT<input id="carrierCuit" required maxlength="20" inputmode="numeric"></label>
+        <label>Nombre del chofer<input id="driverName" required maxlength="80"></label>
+        <label>CUIL del chofer<input id="driverCuil" required maxlength="20" inputmode="numeric"></label>
+        <label>Celular del chofer<input id="driverPhone" required maxlength="30" inputmode="tel"></label>
+        <div class="field-row">
+          <label>Dominio chasis<input id="chassisPlate" required maxlength="15"></label>
+          <label>Dominio acoplado<input id="trailerPlate" required maxlength="15"></label>
+        </div>
+        <button class="primary" type="submit">Guardar transportista</button>
+        <p class="status" id="carrierStatus" aria-live="polite"></p>
+      </form>
+
+      <div class="card">
+        <div class="section-title"><div><h2>Guardados</h2><p>Podés reutilizarlos para cada viaje.</p></div></div>
+        <div id="carriersList" class="list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guia" class="panel">
+    <div class="two-col">
+      <div class="card form-card">
+        <div class="section-title"><div><h2>Datos para guía</h2><p>Elegí carga y transportista.</p></div></div>
+        <label>Carga
+          <select id="guideLoad"></select>
+        </label>
+        <label>Transportista / unidad
+          <select id="guideCarrier"></select>
+        </label>
+        <button class="primary" type="button" id="buildGuide">Armar mensaje</button>
+      </div>
+      <div class="card">
+        <div class="section-title"><div><h2>Mensaje listo</h2><p>Copialo y mandalo al productor.</p></div></div>
+        <textarea id="guideText" rows="16" readonly></textarea>
+        <div class="actions">
+          <button class="primary" type="button" id="copyGuide">Copiar mensaje</button>
+          <button class="secondary" type="button" id="shareGuide">Compartir</button>
+        </div>
+        <p class="status" id="guideStatus" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
