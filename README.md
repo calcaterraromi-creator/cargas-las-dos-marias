@@ -36,3 +36,8 @@ WhatsApp fijo en la plantilla: 3814099809
 - Los flyers generados NO llevan el logo.
 - Paleta de la app basada en el logo: negro, rojo, blanco, verde y azul, con detalles dorados.
 - Iconos PWA incluidos para agregar la app a la pantalla de inicio.
+
+## Mejoras V3
+- Botón **WhatsApp** en cada transportista guardado para enviar sus datos directamente por WhatsApp.
+- Botón **Editar** para actualizar chofer, CUIL, celular, dominio de chasis y dominio de acoplado cuando cambien.
+- El mismo transportista puede reutilizarse sin volver a cargar todos sus datos.

@@ -132,7 +132,11 @@
           <label>Dominio chasis<input id="chassisPlate" required maxlength="15"></label>
           <label>Dominio acoplado<input id="trailerPlate" required maxlength="15"></label>
         </div>
-        <button class="primary" type="submit">Guardar transportista</button>
+        <div class="actions">
+          <button class="primary" type="submit" id="carrierSubmit">Guardar transportista</button>
+          <button class="secondary hidden" type="button" id="cancelCarrierEdit">Cancelar edición</button>
+        </div>
+        <input type="hidden" id="editingCarrierId" value="">
         <p class="status" id="carrierStatus" aria-live="polite"></p>
       </form>
 

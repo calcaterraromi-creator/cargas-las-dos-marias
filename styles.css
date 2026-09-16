@@ -83,3 +83,11 @@ canvas{display:block;width:min(100%,360px);height:auto;aspect-ratio:9/16;margin:
 .segmented input:checked+span{border-color:var(--red);background:linear-gradient(135deg,#2a1113,#111618);box-shadow:0 0 0 1px rgba(227,27,35,.22) inset}
 .template.selected img{border-color:var(--red)}
 input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,166,223,.14)}
+
+.whatsapp-btn{
+  background:#128C45!important;
+  border-color:#128C45!important;
+  color:#fff!important;
+  font-weight:800;
+}
+.whatsapp-btn::before{content:"◉ ";font-size:11px}

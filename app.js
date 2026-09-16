@@ -231,13 +231,80 @@
   $("#carrierForm").addEventListener("submit",e=>{
     e.preventDefault();
     const c={
-      id:uid(), name:$("#carrierName").value.trim(), cuit:$("#carrierCuit").value.trim(),
-      driver:$("#driverName").value.trim(), cuil:$("#driverCuil").value.trim(),
-      phone:$("#driverPhone").value.trim(), chassis:$("#chassisPlate").value.trim().toUpperCase(),
+      id:$("#editingCarrierId").value || uid(),
+      name:$("#carrierName").value.trim(),
+      cuit:$("#carrierCuit").value.trim(),
+      driver:$("#driverName").value.trim(),
+      cuil:$("#driverCuil").value.trim(),
+      phone:$("#driverPhone").value.trim(),
+      chassis:$("#chassisPlate").value.trim().toUpperCase(),
       trailer:$("#trailerPlate").value.trim().toUpperCase()
     };
-    carriers.unshift(c); storage.set("cargasHoy.carriers",carriers);
-    e.target.reset(); $("#carrierStatus").textContent="Transportista guardado."; renderCarriers(); refreshGuideSelects();
+
+    const editingId=$("#editingCarrierId").value;
+    if(editingId){
+      const idx=carriers.findIndex(x=>x.id===editingId);
+      if(idx>=0) carriers[idx]=c;
+      $("#carrierStatus").textContent="Transportista actualizado.";
+    }else{
+      carriers.unshift(c);
+      $("#carrierStatus").textContent="Transportista guardado.";
+    }
+
+    storage.set("cargasHoy.carriers",carriers);
+    resetCarrierForm();
+    renderCarriers();
+    refreshGuideSelects();
+  });
+
+  function resetCarrierForm(){
+    $("#carrierForm").reset();
+    $("#editingCarrierId").value="";
+    $("#carrierSubmit").textContent="Guardar transportista";
+    $("#cancelCarrierEdit").classList.add("hidden");
+  }
+
+  function startCarrierEdit(id){
+    const c=carriers.find(x=>x.id===id);
+    if(!c)return;
+    $("#editingCarrierId").value=c.id;
+    $("#carrierName").value=c.name;
+    $("#carrierCuit").value=c.cuit;
+    $("#driverName").value=c.driver;
+    $("#driverCuil").value=c.cuil;
+    $("#driverPhone").value=c.phone;
+    $("#chassisPlate").value=c.chassis;
+    $("#trailerPlate").value=c.trailer;
+    $("#carrierSubmit").textContent="Guardar cambios";
+    $("#cancelCarrierEdit").classList.remove("hidden");
+    $("#carrierStatus").textContent="Editando transportista. Podés cambiar chofer, CUIL, celular o dominios.";
+    $("#carrierForm").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function carrierWhatsappText(c){
+    return `DATOS DEL TRANSPORTE
+
+Transporte: ${c.name}
+CUIT: ${c.cuit}
+
+Chofer: ${c.driver}
+CUIL: ${c.cuil}
+Celular: ${c.phone}
+
+Dominio chasis: ${c.chassis}
+Dominio acoplado: ${c.trailer}`;
+  }
+
+  function shareCarrierWhatsApp(id){
+    const c=carriers.find(x=>x.id===id);
+    if(!c)return;
+    const url="https://wa.me/?text="+encodeURIComponent(carrierWhatsappText(c));
+    window.open(url,"_blank","noopener");
+  }
+
+  $("#cancelCarrierEdit").addEventListener("click",()=>{
+    resetCarrierForm();
+    $("#carrierStatus").textContent="Edición cancelada.";
   });
 
   function renderCarriers(){
@@ -246,13 +313,34 @@
     box.innerHTML=carriers.map(c=>`
       <div class="list-item" data-id="${c.id}">
         <div class="list-item-head"><div><strong>${esc(c.name)}</strong><div class="meta">CUIT ${esc(c.cuit)}<br>${esc(c.driver)} · CUIL ${esc(c.cuil)}<br>Chasis ${esc(c.chassis)} · Acoplado ${esc(c.trailer)}<br>${esc(c.phone)}</div></div></div>
-        <div class="item-actions"><button data-action="delete-carrier">Eliminar</button></div>
+        <div class="item-actions">
+          <button class="whatsapp-btn" data-action="share-carrier">WhatsApp</button>
+          <button data-action="edit-carrier">Editar</button>
+          <button data-action="delete-carrier">Eliminar</button>
+        </div>
       </div>`).join("");
   }
   $("#carriersList").addEventListener("click",e=>{
-    const b=e.target.closest("button[data-action='delete-carrier']"); if(!b)return;
-    const id=e.target.closest(".list-item").dataset.id;
-    carriers=carriers.filter(c=>c.id!==id);storage.set("cargasHoy.carriers",carriers);renderCarriers();refreshGuideSelects();
+    const b=e.target.closest("button"); if(!b)return;
+    const id=e.target.closest(".list-item")?.dataset.id; if(!id)return;
+
+    if(b.dataset.action==="share-carrier"){
+      shareCarrierWhatsApp(id);
+      return;
+    }
+
+    if(b.dataset.action==="edit-carrier"){
+      startCarrierEdit(id);
+      return;
+    }
+
+    if(b.dataset.action==="delete-carrier"){
+      carriers=carriers.filter(c=>c.id!==id);
+      storage.set("cargasHoy.carriers",carriers);
+      if($("#editingCarrierId").value===id) resetCarrierForm();
+      renderCarriers();
+      refreshGuideSelects();
+    }
   });
 
   function refreshGuideSelects(){
