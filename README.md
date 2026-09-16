@@ -41,3 +41,9 @@ WhatsApp fijo en la plantilla: 3814099809
 - Botón **WhatsApp** en cada transportista guardado para enviar sus datos directamente por WhatsApp.
 - Botón **Editar** para actualizar chofer, CUIL, celular, dominio de chasis y dominio de acoplado cuando cambien.
 - El mismo transportista puede reutilizarse sin volver a cargar todos sus datos.
+
+## Mejoras V4
+- Botón **Compartir flyer por WhatsApp**.
+- En celular comparte el PNG por el panel nativo del sistema; WhatsApp aparece como opción si está instalado.
+- En PC intenta copiar la imagen al portapapeles y abre WhatsApp Web para pegarla con Ctrl+V.
+- Si el navegador no permite compartir archivos, descarga automáticamente el PNG.

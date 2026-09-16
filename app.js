@@ -183,12 +183,45 @@
   });
 
   $("#shareStory").addEventListener("click",async()=>{
+    $("#storyStatus").textContent="Preparando imagen...";
     const blob=await canvasBlob();
-    const file=new File([blob],"carga-whatsapp.png",{type:"image/png"});
+    const d=data();
+    const filename=`carga-${d.cargo}-${d.origin}-${d.destination}`.replace(/[^\w-]+/g,"-").toLowerCase()+".png";
+    const file=new File([blob],filename,{type:"image/png"});
+
+    if(navigator.share){
+      try{
+        const canShareFiles = !navigator.canShare || navigator.canShare({files:[file]});
+        if(canShareFiles){
+          await navigator.share({files:[file],title:"Carga disponible",text:"Carga disponible"});
+          $("#storyStatus").textContent="Imagen lista para compartir. Elegí WhatsApp.";
+          return;
+        }
+      }catch(e){
+        if(e && e.name==="AbortError"){
+          $("#storyStatus").textContent="Compartir cancelado.";
+          return;
+        }
+      }
+    }
+
     try{
-      if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:"Carga disponible"});$("#storyStatus").textContent="Lista para compartir."}
-      else{$("#storyStatus").textContent="En este dispositivo usá Descargar PNG y subila a WhatsApp."}
-    }catch(e){if(e.name!=="AbortError")$("#storyStatus").textContent="No se pudo compartir; podés descargarla."}
+      if(navigator.clipboard && window.ClipboardItem){
+        await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);
+        window.open("https://web.whatsapp.com/","_blank","noopener");
+        $("#storyStatus").textContent="Imagen copiada. En WhatsApp Web, abrí el chat y pegá con Ctrl+V.";
+        return;
+      }
+    }catch(e){}
+
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+    $("#storyStatus").textContent="La imagen se descargó. Abrí WhatsApp y adjuntala desde Descargas.";
   });
 
   $("#saveLoad").addEventListener("click",()=>{

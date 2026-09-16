@@ -91,3 +91,5 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
   font-weight:800;
 }
 .whatsapp-btn::before{content:"◉ ";font-size:11px}
+
+.whatsapp-share{background:linear-gradient(135deg,#25D366,#128C45)!important;border-color:#25D366!important;color:white!important;}
