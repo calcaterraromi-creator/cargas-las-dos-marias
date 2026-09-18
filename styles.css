@@ -93,3 +93,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 .whatsapp-btn::before{content:"◉ ";font-size:11px}
 
 .whatsapp-share{background:linear-gradient(135deg,#25D366,#128C45)!important;border-color:#25D366!important;color:white!important;}
+
+.cargo-types{grid-template-columns:repeat(4,1fr)}
+.search-box{position:relative;display:block;margin-bottom:8px}
+.search-box input{padding-left:48px;background:#0e1013;border:1px solid #3a4047}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:20px;z-index:1}
+.search-count{font-size:12px;color:var(--muted);margin:0 0 12px}
+.select-carrier-btn{background:#173b69!important;border-color:#275d9d!important;color:white!important;font-weight:800}
+.carrier-card{transition:border-color .15s,background .15s}
+@media(max-width:640px){.cargo-types{grid-template-columns:repeat(2,1fr)}}

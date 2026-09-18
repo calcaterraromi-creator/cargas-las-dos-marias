@@ -39,9 +39,11 @@
 
         <fieldset>
           <legend>Tipo de carga</legend>
-          <div class="segmented">
+          <div class="segmented cargo-types">
             <label><input type="radio" name="cargo" value="papa" checked><span>🥔 Papa</span></label>
             <label><input type="radio" name="cargo" value="harina"><span>🌾 Harina</span></label>
+            <label><input type="radio" name="cargo" value="cereal"><span>🌽 Cereal</span></label>
+            <label><input type="radio" name="cargo" value="fertilizante"><span>🧺 Fertilizante</span></label>
           </div>
         </fieldset>
 
@@ -57,10 +59,18 @@
               <option value="Mañana">MAÑANA</option>
             </select>
           </label>
-          <label id="priceWrap">Precio por bolsa
-            <input id="price" type="number" min="0" step="50" value="1300" inputmode="numeric">
+          <label>Modalidad de tarifa
+            <select id="priceMode">
+              <option value="bolsa">Por bolsa</option>
+              <option value="tonelada">Por tonelada</option>
+              <option value="viaje">Por viaje</option>
+              <option value="sin_precio">No mostrar precio</option>
+            </select>
           </label>
         </div>
+        <label id="priceWrap">Importe
+          <input id="price" type="number" min="0" step="50" value="1300" inputmode="numeric">
+        </label>
 
         <label>Cantidad de camiones <small>(opcional)</small>
           <input id="trucks" type="number" min="0" max="99" value="1" inputmode="numeric">
@@ -83,6 +93,14 @@
           <label class="template">
             <input type="radio" name="template" value="premium">
             <img src="assets/premium.jpg" alt="Fondo negro rojo dorado"><span>Premium</span>
+          </label>
+          <label class="template">
+            <input type="radio" name="template" value="cereal">
+            <img src="assets/cereal.jpg" alt="Cereal y campo"><span>Cereal</span>
+          </label>
+          <label class="template">
+            <input type="radio" name="template" value="fertilizante">
+            <img src="assets/fertilizante.jpg" alt="Fertilizante"><span>Fertilizante</span>
           </label>
         </div>
 
@@ -142,6 +160,11 @@
 
       <div class="card">
         <div class="section-title"><div><h2>Guardados</h2><p>Podés reutilizarlos para cada viaje.</p></div></div>
+        <label class="search-box">
+          <span class="search-icon">🔎</span>
+          <input id="carrierSearch" type="search" placeholder="Buscar transporte, chofer, CUIT, CUIL, teléfono o patente…" autocomplete="off">
+        </label>
+        <p class="search-count" id="carrierSearchCount"></p>
         <div id="carriersList" class="list"></div>
       </div>
     </div>

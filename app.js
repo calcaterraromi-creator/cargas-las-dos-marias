@@ -3,7 +3,7 @@
   const $ = (q, root=document) => root.querySelector(q);
   const $$ = (q, root=document) => [...root.querySelectorAll(q)];
   const WHATSAPP = "3814099809";
-  const assetMap = {papa:"assets/papa.jpg", harina:"assets/harina.jpg", ruta:"assets/ruta.jpg", premium:"assets/premium.jpg"};
+  const assetMap = {papa:"assets/papa.jpg", harina:"assets/harina.jpg", ruta:"assets/ruta.jpg", premium:"assets/premium.jpg", cereal:"assets/cereal.jpg", fertilizante:"assets/fertilizante.jpg"};
   const imageCache = {};
   let customBgUrl = "";
 
@@ -26,12 +26,41 @@
       destination:$("#destination").value.trim() || "Destino",
       when:$("#when").value,
       price:Math.max(0, Number($("#price").value)||0),
+      priceMode:$("#priceMode").value,
       trucks:Math.max(0, Math.min(99, Number($("#trucks").value)||0)),
       template:template()
     };
   }
 
   function formatMoney(n){return new Intl.NumberFormat("es-AR").format(n)}
+  function cargoLabel(v){
+    return ({papa:"Papa",harina:"Harina",cereal:"Cereal",fertilizante:"Fertilizante"})[v] || v;
+  }
+  function priceModeLabel(v){
+    return ({bolsa:"la bolsa",tonelada:"la tonelada",viaje:"el viaje"})[v] || "";
+  }
+  function applyCargoDefaults(){
+    const c=cargo();
+    const defaults={
+      papa:{mode:"bolsa",template:"papa",price:1300},
+      harina:{mode:"sin_precio",template:"harina",price:0},
+      cereal:{mode:"tonelada",template:"cereal",price:85000},
+      fertilizante:{mode:"viaje",template:"fertilizante",price:0}
+    };
+    const cfg=defaults[c]||defaults.papa;
+    $("#priceMode").value=cfg.mode;
+    $("#price").value=cfg.price || "";
+    const r=$(`input[name="template"][value="${cfg.template}"]`);
+    if(r) r.checked=true;
+    customBgUrl="";
+    $("#customBg").value="";
+    updatePriceVisibility();
+    updateTemplateSelection();
+  }
+  function updatePriceVisibility(){
+    $("#priceWrap").classList.toggle("hidden", $("#priceMode").value==="sin_precio");
+  }
+
 
   function setTab(id){
     $$(".tab").forEach(b=>b.classList.toggle("active", b.dataset.tab===id));
@@ -98,7 +127,7 @@
     ctx.fillText(`CARGA DISPONIBLE ${d.when.toUpperCase()}`,540,134);
 
     // headline
-    const word=d.cargo==="papa"?"PAPA":"HARINA";
+    const word=cargoLabel(d.cargo).toUpperCase();
     ctx.textAlign="center";
     ctx.fillStyle="white"; ctx.font="900 76px Arial"; ctx.fillText("CARGA DE",540,310);
     const fs=fitText(ctx,word,840,150,90);
@@ -113,16 +142,19 @@
     ctx.fillStyle="white"; ctx.font="900 52px Arial"; ctx.fillText(d.destination,955,660);
     ctx.textAlign="center"; ctx.fillStyle="#f3c640"; ctx.font="900 64px Arial"; ctx.fillText("→",540,652);
 
-    // price or flour timing
-    if(d.cargo==="papa"){
+    // tarifa según modalidad
+    if(d.priceMode!=="sin_precio" && d.price){
       roundRect(ctx,155,790,770,180,28,"rgba(73,36,0,.87)",null);
       ctx.fillStyle="#f3c640"; ctx.font="900 92px Arial"; ctx.textAlign="center";
-      ctx.fillText(d.price ? `$${formatMoney(d.price)}` : "PRECIO A CONFIRMAR",540,875);
-      ctx.fillStyle="white"; ctx.font="900 48px Arial"; ctx.fillText(d.price ? "LA BOLSA" : "",540,935);
+      ctx.fillText(`$${formatMoney(d.price)}`,540,875);
+      ctx.fillStyle="white"; ctx.font="900 48px Arial";
+      ctx.fillText(priceModeLabel(d.priceMode).toUpperCase(),540,935);
     } else {
-      roundRect(ctx,155,790,770,160,28,"rgba(73,36,0,.87)",null);
-      ctx.fillStyle="#f3c640"; ctx.font="900 62px Arial"; ctx.textAlign="center";
-      ctx.fillText(`SE CARGA ${d.when.toUpperCase()}`,540,885);
+      roundRect(ctx,155,790,770,180,28,"rgba(73,36,0,.87)",null);
+      ctx.fillStyle="#f3c640"; ctx.font="900 68px Arial"; ctx.textAlign="center";
+      ctx.fillText("CONSULTAR TARIFA",540,865);
+      ctx.fillStyle="white"; ctx.font="900 42px Arial";
+      ctx.fillText(`SE CARGA ${d.when.toUpperCase()}`,540,930);
     }
 
     if(d.trucks){
@@ -150,14 +182,11 @@
   }
 
   $("#storyForm").addEventListener("submit",async e=>{e.preventDefault();await drawStory();$("#formStatus").textContent="Historia actualizada."});
-  ["#origin","#destination","#when","#price","#trucks"].forEach(q=>$(q).addEventListener("input",drawStory));
+  ["#origin","#destination","#when","#price","#priceMode","#trucks"].forEach(q=>$(q).addEventListener("input",()=>{updatePriceVisibility();drawStory()}));
 
   $$('input[name="cargo"]').forEach(r=>r.addEventListener("change",()=>{
-    const isPapa=cargo()==="papa";
-    $("#priceWrap").classList.toggle("hidden",!isPapa);
-    if(isPapa){$('input[name="template"][value="papa"]').checked=true}
-    else{$('input[name="template"][value="harina"]').checked=true}
-    updateTemplateSelection(); drawStory();
+    applyCargoDefaults();
+    drawStory();
   }));
 
   function updateTemplateSelection(){
@@ -238,8 +267,8 @@
     box.innerHTML=loads.map(l=>`
       <div class="list-item" data-id="${l.id}">
         <div class="list-item-head">
-          <div><strong>${esc(l.cargo==="papa"?"Papa":"Harina")} · ${esc(l.origin)} → ${esc(l.destination)}</strong>
-          <div class="meta">${esc(l.when)}${l.cargo==="papa"&&l.price?` · $${formatMoney(l.price)} la bolsa`:""}${l.trucks?` · ${l.trucks} ${l.trucks===1?"camión":"camiones"}`:""}</div></div>
+          <div><strong>${esc(cargoLabel(l.cargo))} · ${esc(l.origin)} → ${esc(l.destination)}</strong>
+          <div class="meta">${esc(l.when)}${l.priceMode!=="sin_precio"&&l.price?` · $${formatMoney(l.price)} ${priceModeLabel(l.priceMode||"bolsa")}`:""}${l.trucks?` · ${l.trucks} ${l.trucks===1?"camión":"camiones"}`:""}</div></div>
           <span class="pill ${esc(l.status)}">${esc(l.status.toUpperCase())}</span>
         </div>
         <div class="item-actions">
@@ -340,22 +369,56 @@ Dominio acoplado: ${c.trailer}`;
     $("#carrierStatus").textContent="Edición cancelada.";
   });
 
+  function normalized(v){
+    return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  }
+
+  function filteredCarriers(){
+    const q=normalized($("#carrierSearch")?.value || "");
+    if(!q) return carriers;
+    return carriers.filter(c=>{
+      const hay=[c.name,c.cuit,c.driver,c.cuil,c.phone,c.chassis,c.trailer].map(normalized).join(" ");
+      return hay.includes(q);
+    });
+  }
+
   function renderCarriers(){
     const box=$("#carriersList");
+    const shown=filteredCarriers();
+    const count=$("#carrierSearchCount");
+    if(count) count.textContent=carriers.length ? `${shown.length} de ${carriers.length} transportistas` : "";
     if(!carriers.length){box.innerHTML='<div class="empty">Todavía no guardaste transportistas.</div>';return}
-    box.innerHTML=carriers.map(c=>`
-      <div class="list-item" data-id="${c.id}">
-        <div class="list-item-head"><div><strong>${esc(c.name)}</strong><div class="meta">CUIT ${esc(c.cuit)}<br>${esc(c.driver)} · CUIL ${esc(c.cuil)}<br>Chasis ${esc(c.chassis)} · Acoplado ${esc(c.trailer)}<br>${esc(c.phone)}</div></div></div>
+    if(!shown.length){box.innerHTML='<div class="empty">No encontré coincidencias. Probá con apellido, transporte, CUIT, CUIL o patente.</div>';return}
+    box.innerHTML=shown.map(c=>`
+      <div class="list-item carrier-card" data-id="${c.id}">
+        <div class="list-item-head">
+          <div>
+            <strong>${esc(c.name)}</strong>
+            <div class="meta"><b>Chofer:</b> ${esc(c.driver)}<br>CUIT ${esc(c.cuit)} · CUIL ${esc(c.cuil)}<br>Chasis ${esc(c.chassis)} · Acoplado ${esc(c.trailer)}<br>${esc(c.phone)}</div>
+          </div>
+        </div>
         <div class="item-actions">
+          <button class="select-carrier-btn" data-action="select-carrier">Usar para guía</button>
           <button class="whatsapp-btn" data-action="share-carrier">WhatsApp</button>
           <button data-action="edit-carrier">Editar</button>
           <button data-action="delete-carrier">Eliminar</button>
         </div>
       </div>`).join("");
   }
+
+  $("#carrierSearch").addEventListener("input",renderCarriers);
+
   $("#carriersList").addEventListener("click",e=>{
     const b=e.target.closest("button"); if(!b)return;
     const id=e.target.closest(".list-item")?.dataset.id; if(!id)return;
+
+    if(b.dataset.action==="select-carrier"){
+      refreshGuideSelects();
+      $("#guideCarrier").value=id;
+      setTab("guia");
+      $("#guideStatus").textContent="Transportista seleccionado para la guía.";
+      return;
+    }
 
     if(b.dataset.action==="share-carrier"){
       shareCarrierWhatsApp(id);
@@ -386,7 +449,7 @@ Dominio acoplado: ${c.trailer}`;
     if(!l||!c)return "";
     return `DATOS PARA GUÍA DE TRASLADO
 
-Carga: ${l.cargo==="papa"?"Papa":"Harina"}
+Carga: ${cargoLabel(l.cargo)}
 Origen: ${l.origin}
 Destino: ${l.destination}
 Carga: ${l.when}
@@ -414,7 +477,7 @@ Dominio acoplado: ${c.trailer}`;
   });
 
   // Initial state
-  renderLoads(); renderCarriers(); refreshGuideSelects(); updateTemplateSelection(); drawStory();
+  renderLoads(); renderCarriers(); refreshGuideSelects(); updateTemplateSelection(); updatePriceVisibility(); drawStory();
 
   if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 })();

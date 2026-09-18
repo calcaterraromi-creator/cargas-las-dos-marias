@@ -47,3 +47,40 @@ WhatsApp fijo en la plantilla: 3814099809
 - En celular comparte el PNG por el panel nativo del sistema; WhatsApp aparece como opción si está instalado.
 - En PC intenta copiar la imagen al portapapeles y abre WhatsApp Web para pegarla con Ctrl+V.
 - Si el navegador no permite compartir archivos, descarga automáticamente el PNG.
+
+## Mejoras V5
+- Buscador con lupa para transportistas.
+- Busca por transporte, chofer, CUIT, CUIL, teléfono, chasis o acoplado.
+- Botón **Usar para guía** para elegir rápidamente chofer/unidad.
+- Nuevos tipos de carga: **Cereal** y **Fertilizante**.
+- Modalidad de tarifa configurable: **por bolsa, por tonelada, por viaje o sin mostrar precio**.
+- Cereal queda por defecto en precio por tonelada.
+- Harina queda por defecto sin mostrar precio.
+- Nuevos fondos permanentes para Cereal y Fertilizante.
+- Sigue funcionando sin base de datos y sin costo para uso en un solo dispositivo.
+
+## Mejoras V6
+- Cuando no se muestra precio, el flyer dice automáticamente **CONSULTAR TARIFA**.
+- Debajo mantiene el texto **SE CARGA HOY** o **SE CARGA MAÑANA**.
+- También aplica si el importe queda vacío.
+
+## V7 COMPLETA — versión consolidada
+Incluye todas las modificaciones pedidas hasta ahora:
+- Logo y colores de Expreso Las Dos Marías dentro de la app, no en los flyers.
+- Historias 9:16 con fondos permanentes para Papa, Harina, Ruta, Premium, Cereal y Fertilizante.
+- Cargas con origen y destino libres.
+- Opción HOY o MAÑANA.
+- Tipos de carga: Papa, Harina, Cereal y Fertilizante.
+- Tarifa por bolsa, por tonelada, por viaje o sin publicar precio.
+- Si no se publica precio, el flyer muestra automáticamente CONSULTAR TARIFA.
+- CTA en el flyer: RESPONDÉ ESTA HISTORIA PARA RESERVAR TU VIAJE.
+- CTA inferior fijo: Comunicarse al 3814099809.
+- Descargar flyer PNG y compartir flyer por WhatsApp.
+- Guardar transportistas localmente en el dispositivo.
+- Buscador con lupa por transporte, chofer, CUIT, CUIL, teléfono, chasis o acoplado.
+- Editar transportista/chofer/unidad.
+- Compartir datos del transportista por WhatsApp.
+- Seleccionar transportista para Datos para guía.
+- Generar y compartir mensaje con datos para guía.
+- Cargas guardadas con estado Disponible / Asignada / Cerrada.
+- Funcionamiento sin base de datos paga para uso en un solo dispositivo.
